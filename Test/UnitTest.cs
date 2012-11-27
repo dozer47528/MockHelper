@@ -19,7 +19,9 @@ namespace Test
         {
             var test = new Mock<TestClass>();
             test.Setup(t => t.Method1()).Returns("Mock");
+            test.Setup(t => t.Method2()).Returns("Mock");
             Assert.AreEqual(test.Object.Method1(), "Mock");
+            Assert.AreEqual(test.Object.Method2(), "Mock");
         }
     }
 }

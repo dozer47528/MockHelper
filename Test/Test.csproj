@@ -73,28 +73,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MockHelper\mock.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MockHelper\MockHelper.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MockHelper\Mono.Cecil.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MockHelper\Mono.Cecil.Mdb.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MockHelper\Mono.Cecil.Pdb.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MockHelper\Mono.Cecil.Rocks.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="MockHelper\mock.txt" />
+    <Content Include="MockHelper\MockHelper.exe" />
+    <Content Include="MockHelper\Mono.Cecil.dll" />
+    <Content Include="MockHelper\Mono.Cecil.Mdb.dll" />
+    <Content Include="MockHelper\Mono.Cecil.Pdb.dll" />
+    <Content Include="MockHelper\Mono.Cecil.Rocks.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(TargetDir)MockHelper\MockHelper.exe"</PostBuildEvent>
+    <PostBuildEvent>"$(ProjectDir)MockHelper\MockHelper.exe"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

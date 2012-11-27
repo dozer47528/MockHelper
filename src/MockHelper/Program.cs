@@ -15,7 +15,8 @@ namespace MockHelper
     {
         static void Main(string[] args)
         {
-            foreach (var file in GetDlls())
+            var root = (args == null || args.Length == 0) ? string.Empty : args[0];
+            foreach (var file in GetDlls(root))
             {
                 try
                 {
@@ -31,7 +32,7 @@ namespace MockHelper
             }
         }
 
-        private static IEnumerable<string> GetDlls()
+        private static IEnumerable<string> GetDlls(string root)
         {
             var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "mock.txt"));
             var dlls = reader.ReadToEnd();
@@ -39,7 +40,7 @@ namespace MockHelper
 
             foreach (var file in paths)
             {
-                var info = new FileInfo(file);
+                var info = new FileInfo(Path.Combine(root, file));
                 var ext = Path.GetExtension(info.Name).ToLower();
                 if (ext != ".dll" && ext != ".exe") { continue; }
                 yield return info.FullName;
@@ -52,9 +53,9 @@ namespace MockHelper
             return File.Exists(pdb);
         }
 
-        private static void OverWrite(string args, bool hasSymbols)
+        private static void OverWrite(string file, bool hasSymbols)
         {
-            var asmDef = AssemblyDefinition.ReadAssembly(args, new ReaderParameters { ReadSymbols = hasSymbols });
+            var asmDef = AssemblyDefinition.ReadAssembly(file, new ReaderParameters { ReadSymbols = hasSymbols });
             var classTypes = asmDef.Modules
                                    .SelectMany(m => m.Types)
                                    .Where(t => t.IsClass)
@@ -72,40 +73,21 @@ namespace MockHelper
                     if (method.IsStatic) continue;
                     if (method.IsConstructor) continue;
                     if (method.IsAbstract) continue;
-                    method.IsFinal = false;
-                    method.IsPrivate = false;
-                    method.IsVirtual = true;
-                    method.IsPublic = true;
-                }
 
-                foreach (var prop in type.Properties)
-                {
-                    if (prop.SetMethod != null)
+                    if (!method.IsVirtual)
                     {
-                        prop.SetMethod.IsPrivate = false;
-                        prop.SetMethod.IsFinal = false;
-                        prop.SetMethod.IsVirtual = true;
-                        prop.SetMethod.IsPublic = true;
+                        method.IsVirtual = true;
+                        method.IsNewSlot = true;
+                        method.IsReuseSlot = false;
                     }
-                    if (prop.GetMethod != null)
+                    else
                     {
-                        prop.GetMethod.IsPrivate = false;
-                        prop.GetMethod.IsFinal = false;
-                        prop.GetMethod.IsVirtual = true;
-                        prop.GetMethod.IsPublic = true;
+                        method.IsFinal = false;
                     }
-                }
-
-                foreach (var field in type.Fields)
-                {
-                    if (field.IsStatic) continue;
-                    field.IsPrivate = false;
-                    field.IsInitOnly = false;
-                    field.IsPublic = true;
                 }
             }
 
-            asmDef.Write(args, new WriterParameters
+            asmDef.Write(file, new WriterParameters
             {
                 WriteSymbols = hasSymbols
             });
