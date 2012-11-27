@@ -32,6 +32,11 @@ namespace MockHelper
             }
         }
 
+        /// <summary>
+        /// read dll and exe from Mock.txt
+        /// </summary>
+        /// <param name="root">root path(can be empty)</param>
+        /// <returns></returns>
         private static IEnumerable<string> GetDlls(string root)
         {
             var reader = new StreamReader(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "mock.txt"));
@@ -40,19 +45,29 @@ namespace MockHelper
 
             foreach (var file in paths)
             {
-                var info = new FileInfo(Path.Combine(root, file));
+                var info = new FileInfo(Path.Combine(root ?? string.Empty, file));
                 var ext = Path.GetExtension(info.Name).ToLower();
                 if (ext != ".dll" && ext != ".exe") { continue; }
                 yield return info.FullName;
             }
         }
 
+        /// <summary>
+        /// has .pdb file?
+        /// </summary>
+        /// <param name="dll"></param>
+        /// <returns></returns>
         private static bool HasSymbols(string dll)
         {
             var pdb = Path.GetFileNameWithoutExtension(dll) + ".pdb";
             return File.Exists(pdb);
         }
 
+        /// <summary>
+        /// overwrite file
+        /// </summary>
+        /// <param name="file">file path</param>
+        /// <param name="hasSymbols">has .pdb file</param>
         private static void OverWrite(string file, bool hasSymbols)
         {
             var asmDef = AssemblyDefinition.ReadAssembly(file, new ReaderParameters { ReadSymbols = hasSymbols });
@@ -87,10 +102,7 @@ namespace MockHelper
                 }
             }
 
-            asmDef.Write(file, new WriterParameters
-            {
-                WriteSymbols = hasSymbols
-            });
+            asmDef.Write(file, new WriterParameters { WriteSymbols = hasSymbols });
         }
     }
 }

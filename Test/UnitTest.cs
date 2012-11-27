@@ -18,10 +18,15 @@ namespace Test
         public void TestMethod1()
         {
             var test = new Mock<TestClass>();
-            test.Setup(t => t.Method1()).Returns("Mock");
-            test.Setup(t => t.Method2()).Returns("Mock");
-            Assert.AreEqual(test.Object.Method1(), "Mock");
-            Assert.AreEqual(test.Object.Method2(), "Mock");
+            test.Setup(t => t.NormalMethod()).Returns("Mock");
+            test.Setup(t => t.VirtualMethod()).Returns("Mock");
+            test.Setup(t => t.SealedMethod()).Returns("Mock");
+            test.Setup(t => t.AbstractMethod()).Returns("Mock");
+
+            Assert.AreEqual(test.Object.NormalMethod(), "Mock");
+            Assert.AreEqual(test.Object.VirtualMethod(), "Mock");
+            Assert.AreEqual(test.Object.SealedMethod(), "Mock");
+            Assert.AreEqual(test.Object.AbstractMethod(), "Mock");
         }
     }
 }

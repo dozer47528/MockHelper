@@ -7,21 +7,39 @@ namespace TestDll
 {
     public sealed class TestClass : TestClassBase
     {
-        public string Method1()
+        public string NormalMethod()
         {
             return "TestClass";
         }
-        public override string Method2()
+
+        public override string VirtualMethod()
         {
-            return base.Method2();
+            return base.VirtualMethod();
+        }
+
+        public sealed override string SealedMethod()
+        {
+            return base.VirtualMethod();
+        }
+
+        public override string AbstractMethod()
+        {
+            return "TestClass";
         }
     }
 
-    public class TestClassBase
+    public abstract class TestClassBase
     {
-        public virtual string Method2()
+        public virtual string VirtualMethod()
         {
             return "TestClass";
         }
+
+        public virtual string SealedMethod()
+        {
+            return "TestClass";
+        }
+
+        public abstract string AbstractMethod();
     }
 }
