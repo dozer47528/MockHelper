@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TestDll
 {
-    public sealed class TestClass : TestClassBase
+    public class TestClass : TestClassBase
     {
         public string NormalMethod()
         {
@@ -23,6 +23,16 @@ namespace TestDll
         }
 
         public override string AbstractMethod()
+        {
+            return "TestClass";
+        }
+
+        public string CallPrivateMethod()
+        {
+            return PrivateMethod();
+        }
+
+        public string PrivateMethod()
         {
             return "TestClass";
         }

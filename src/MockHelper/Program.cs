@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Configuration;
-using System.Threading;
-using System.Net;
 using Mono.Cecil;
 using System.IO;
 using System.Diagnostics;
+using Mono.Cecil.Cil;
 
 namespace MockHelper
 {
@@ -83,12 +80,20 @@ namespace MockHelper
                     type.IsSealed = false;
                 }
 
-                foreach (var method in type.Methods)
+                foreach (var method in from method in type.Methods
+                                       where !method.IsStatic
+                                       where !method.IsConstructor
+                                       where !method.IsAbstract
+                                       select method)
                 {
-                    if (method.IsStatic) continue;
-                    if (method.IsConstructor) continue;
-                    if (method.IsAbstract) continue;
+                    //change private to protected
+                    if (method.IsPrivate)
+                    {
+                        method.IsFamily = true;
+                        method.IsPrivate = false;
+                    }
 
+                    //change non-virtual to virtual
                     if (!method.IsVirtual)
                     {
                         method.IsVirtual = true;
@@ -99,6 +104,9 @@ namespace MockHelper
                     {
                         method.IsFinal = false;
                     }
+
+                    var il = method.Body.GetILProcessor();
+                    il.Replace(il.Create(OpCodes.Call), il.Create(OpCodes.Callvirt));
                 }
             }
 

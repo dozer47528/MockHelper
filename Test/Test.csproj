@@ -46,7 +46,8 @@
     <Reference Include="Mono.Cecil.Rocks">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Moq">
+    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -64,12 +65,6 @@
     <Compile Include="UnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\TestDll\TestDll.csproj">
-      <Project>{DFF4D387-3B89-4BEE-8A6B-95FCFE8F752E}</Project>
-      <Name>TestDll</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +74,12 @@
     <Content Include="MockHelper\Mono.Cecil.Mdb.dll" />
     <Content Include="MockHelper\Mono.Cecil.Pdb.dll" />
     <Content Include="MockHelper\Mono.Cecil.Rocks.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\TestDll\TestDll.csproj">
+      <Project>{dff4d387-3b89-4bee-8a6b-95fcfe8f752e}</Project>
+      <Name>TestDll</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
